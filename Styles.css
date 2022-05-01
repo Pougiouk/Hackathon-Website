@@ -1,0 +1,20 @@
+html {
+    background: #666666;
+}
+#Header {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+}
+a {
+    color: #fff;
+    text-decoration: none;
+    background-color: #4d4d4d;
+    padding: 1px 30px;
+    border-radius: 25px;
+}
+a:hover {
+    background-color: black;
+    border-radius: 0px;
+    transition-duration:1s;
+}
