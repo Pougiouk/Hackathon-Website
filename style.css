@@ -38,6 +38,7 @@ h3:hover {
     border-radius: 360px;
     background: #4d4d4d;
     text-align: center;
+    font-size: 250%;
 }
 button {
     color: #fff;
@@ -46,7 +47,7 @@ button {
     border-radius: 25px;
     align-self: center;
     border: 0;
-    font-size: 200%;
+    font-size: 250%;
 }
 p {
     color: #fff;
