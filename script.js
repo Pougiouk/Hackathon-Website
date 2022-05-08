@@ -61,60 +61,60 @@ function showPosition(position) {
   const earthQuakeLatitudeDegrees = earthQuakeLatitude/57.29577951;
   const earthQuakeLongitudeDegrees = earthQuakeLongitude/57.29577951;
   Distance = 6378.8*(Math.acos((Math.sin(userLatitudeDegrees)*Math.sin(earthQuakeLatitudeDegrees))+Math.cos(userLatitudeDegrees)*Math.cos(earthQuakeLatitudeDegrees)*Math.cos((earthQuakeLongitudeDegrees-userLongitudeDegrees))));
-  document.getElementById("locationText").innerHTML = 'Drop, Cover and Hold.<br> A 8.0 magnitude earthquake just occured ' + Distance + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore";
-  console.log(Distance)
+  document.getElementById("locationText").innerHTML = 'Drop, Cover and Hold.<br> A 8.0 magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore";
+  console.log(Distance.toFixed(2))
   console.log(mag)
 }
 //-----------Distance-Functions----------
 function mag7() {
   if(Distance <= 500) {
-    alert('Drop, Cover and Hold. A'+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you.');
+    alert('Drop, Cover and Hold. A'+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ff0000";
     if(tsunami > 0) {
-      document.getElementById("locationText").innerHTML('Drop, Cover and Hold <br> a '+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore" )
+      document.getElementById("locationText").innerHTML('Drop, Cover and Hold <br> a '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore" )
     }
   } else if(Distance <= 750) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you.');
+    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ffd000";
   }
 }
 function mag6() {
   if(Distance <= 250) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you.');
+    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ff0000";
   } else if(Distance <= 500) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you.');
+    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ffd000";
   }
 }
 function mag4() {
   if(Distance <= 200) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you.');
+    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ff0000";
   } else if(Distance <= 350) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you.');
+    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ffd000";
   }
 }
 function mag2() {
   if(Distance <= 100) {
-    alert('A '+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you.');
+    alert('A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ffd000";
   } else if(Distance <= 150) {
-    alert('A '+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you.');
+    alert('A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
     document.getElementById("safety").innerHTML("SAFE");
     document.getElementById("safety").style.background = "#90ee90";
   }
 }
 function mag0() {
-  alert('A '+ mag +'magnitude earthquake just occured ' + Distance + 'Km away from you.');
+  alert('A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
   document.getElementById("safety").innerHTML("SAFE");
   document.getElementById("safety").style.background = "#90ee90";
 }
