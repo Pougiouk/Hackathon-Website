@@ -1,50 +1,4 @@
-//----------------Tsunami----------------
-$(document).ready(function(){
-  $.ajax({
-    url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson",
-    dataType: "json",
-    complete: function(data){
-      var response = data.responseJSON;
-      var features = response.features;
-      var feature = features[0];
-      var properties=feature.properties;
-      tsunami = properties.tsunami;
-      tsunami = tsunami * 100;
-    }
-  });
-});
-//--------------Earth-Quake--------------
-$(document).ready(function(){
-  $.ajax({
-    url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson",
-    dataType: "json",
-    complete: function(data){
-      var response = data.responseJSON;
-      var features = response.features;
-      var feature = features[0];
-      var geometry = feature.geometry;
-      var coordinates = geometry.coordinates;
-      earthQuakeLongitude = coordinates[0];
-      earthQuakeLatitude = coordinates[1];
-    }
-  });
-});
-//---------------Magnitude---------------
-$(document).ready(function(){
-  $.ajax({
-    url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson",
-    dataType: "json",
-    complete: function(data){
-      var response = data.responseJSON;
-      var features = response.features;
-      var feature = features[0];
-      var properties=feature.properties;
-      mag = properties.mag;
-    }
-  });
-});
 //---------------Location----------------
-var locationText  = document.getElementById("locationText");
 function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
@@ -52,91 +6,93 @@ function getLocation() {
     locationText.innerHTML = "Geolocation is not supported by this browser.";
   }
 }
+//---------------API-Call----------------
+let earthQuake = { longitude: undefined, latitude: undefined};
+let magnitude = undefined;
+let tsunami = undefined;
+fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson")
+  .then(data => data.json())
+  .then(featureCollection => {
+    const feature0 = featureCollection.features[0];
+    earthQuake.longitude = feature0.geometry.coordinates[0];
+    earthQuake.latitude = feature0.geometry.coordinates[1];
+    magnitude = feature0.properties.earthQuake;
+    tsunami = feature0.properties.tsunami * 100;
+  })
 //------Distance-Between-Two-Points------
+let userCoordinates = {longitude: undefined, latitude: undefined}
 function showPosition(position) {
-  const userLatitude = position.coords.latitude;
-  const userLongitude = position.coords.longitude;
-  const userLatitudeDegrees = userLatitude/57.29577951;
-  const userLongitudeDegrees = userLongitude/57.29577951;
-  const earthQuakeLatitudeDegrees = earthQuakeLatitude/57.29577951;
-  const earthQuakeLongitudeDegrees = earthQuakeLongitude/57.29577951;
-  Distance = 6378.8*(Math.acos((Math.sin(userLatitudeDegrees)*Math.sin(earthQuakeLatitudeDegrees))+Math.cos(userLatitudeDegrees)*Math.cos(earthQuakeLatitudeDegrees)*Math.cos((earthQuakeLongitudeDegrees-userLongitudeDegrees))));
-  document.getElementById("locationText").innerHTML = 'Drop, Cover and Hold.<br> A 8.0 magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore";
-  console.log(Distance.toFixed(2))
-  console.log(mag)
+  userCoordinates.latitude = position.coords.latitude;
+  userCoordinates.longitude = position.coords.longitude;
+  userCoordinates.latitude = userCoordinates.latitude/57.29577951;
+  userCoordinates.longitude = userCoordinates.longitude/57.29577951;
+  earthQuake.latitude = earthQuake.latitude/57.29577951;
+  earthQuake.longitude = earthQuake.longitude/57.29577951;
+  Distance = (6378.8*(Math.acos(
+              Math.sin(userCoordinates.latitude) * 
+              Math.sin(earthQuake.latitude) + 
+              Math.cos(userCoordinates.latitude) * 
+              Math.cos(earthQuake.latitude) * 
+              Math.cos((earthQuake.longitude-userCoordinates.longitude))))).toFixed(2);
 }
 //-----------Distance-Functions----------
+let info1 = ('Drop, Cover and Hold. A '+ magnitude +' magnitude earthquake just occured ' + Distance + 'Km away from you.');
+let info0 = ('A '+ magnitude +' magnitude earthquake just occured ' + Distance + 'Km away from you.')
 function mag7() {
   if(Distance <= 500) {
-    alert('Drop, Cover and Hold. A'+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
+    alert(info1);
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ff0000";
     if(tsunami > 0) {
-      document.getElementById("locationText").innerHTML('Drop, Cover and Hold <br> a '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore" )
+      document.getElementById("locationText").innerHTML('Drop, Cover and Hold <br> a '+ magnitude +' magnitude earthquake just occured ' + Distance + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore" )
     }
   } else if(Distance <= 750) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
+    alert(info1);
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ffd000";
   }
 }
 function mag6() {
   if(Distance <= 250) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
+    alert(info1);
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ff0000";
   } else if(Distance <= 500) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
+    alert(info1);
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ffd000";
   }
 }
 function mag4() {
   if(Distance <= 200) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
+    alert(info1);
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ff0000";
   } else if(Distance <= 350) {
-    alert('Drop, Cover and Hold. A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
+    alert(info1);
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ffd000";
   }
 }
 function mag2() {
   if(Distance <= 100) {
-    alert('A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
+    alert(info0);
     document.getElementById("safety").innerHTML("UNSAFE");
     document.getElementById("safety").style.background = "#ffd000";
   } else if(Distance <= 150) {
-    alert('A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
+    alert(info0);
     document.getElementById("safety").innerHTML("SAFE");
     document.getElementById("safety").style.background = "#90ee90";
   }
 }
 function mag0() {
-  alert('A '+ mag +'magnitude earthquake just occured ' + Distance.toFixed(2) + 'Km away from you.');
+  alert(info0);
   document.getElementById("safety").innerHTML("SAFE");
   document.getElementById("safety").style.background = "#90ee90";
 }
-//------------Call-Functions-------------
-switch(true) {
-  case mag >= 7.0:
-    mag7();
-    break;
-    //7.0+
-  case mag >= 6.0:
-    mag6();
-    break;
-    //6.0-7.0
-  case mag >= 4.0:
-    mag4();
-    break;
-    //4.0-6.0
-  case mag >= 2.5:
-    mag2();
-    break;
-    //2.5-4.0
-  case mag >= 0:
-    mag0();
-    //0-2.5
-}
+//---Call-Functions-------------
+if (magnitude >= 7.0) mag7(); // 7.0 +
+if (magnitude >= 6.0) mag6(); // 6.0 - 7.0
+if (magnitude >= 4.0) mag4(); // 4.0 - 6.0
+if (magnitude >= 2.5) mag2(); // 2.5 - 4.0
+if (magnitude >= 0.0) mag0(); // 0   - 2.5
