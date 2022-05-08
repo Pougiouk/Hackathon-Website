@@ -1,98 +1,99 @@
-//---------------Location----------------
+if (!navigator.geolocation) {
+  locationText.innerHTML = 'Geolocation is not supported by this browser.';
+} else {
+  findLocation.addEventListener('click', getLocation);
+}
+
+//------Get EarthQuake/Tsunami Data------
+
+function getActivity() {
+  return fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson')
+    .then((data) => data.json());
+}
+
+// get location
+
 function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-    locationText.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
-//---------------API-Call----------------
-let earthQuake = { longitude: undefined, latitude: undefined};
-let magnitude = undefined;
-let tsunami = undefined;
-fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson")
-  .then(data => data.json())
-  .then(featureCollection => {
-    const feature0 = featureCollection.features[0];
-    earthQuake.longitude = feature0.geometry.coordinates[0];
-    earthQuake.latitude = feature0.geometry.coordinates[1];
-    magnitude = feature0.properties.earthQuake;
-    tsunami = feature0.properties.tsunami * 100;
-  })
-//------Distance-Between-Two-Points------
-let userCoordinates = {longitude: undefined, latitude: undefined}
-function showPosition(position) {
-  userCoordinates.latitude = position.coords.latitude;
-  userCoordinates.longitude = position.coords.longitude;
-  userCoordinates.latitude = userCoordinates.latitude/57.29577951;
-  userCoordinates.longitude = userCoordinates.longitude/57.29577951;
-  earthQuake.latitude = earthQuake.latitude/57.29577951;
-  earthQuake.longitude = earthQuake.longitude/57.29577951;
-  Distance = (6378.8*(Math.acos(
-              Math.sin(userCoordinates.latitude) * 
-              Math.sin(earthQuake.latitude) + 
-              Math.cos(userCoordinates.latitude) * 
-              Math.cos(earthQuake.latitude) * 
-              Math.cos((earthQuake.longitude-userCoordinates.longitude))))).toFixed(2);
-}
-//-----------Distance-Functions----------
-let info1 = ('Drop, Cover and Hold. A '+ magnitude +' magnitude earthquake just occured ' + Distance + 'Km away from you.');
-let info0 = ('A '+ magnitude +' magnitude earthquake just occured ' + Distance + 'Km away from you.')
-function mag7() {
-  if(Distance <= 500) {
-    alert(info1);
-    document.getElementById("safety").innerHTML("UNSAFE");
-    document.getElementById("safety").style.background = "#ff0000";
-    if(tsunami > 0) {
-      document.getElementById("locationText").innerHTML('Drop, Cover and Hold <br> a '+ magnitude +' magnitude earthquake just occured ' + Distance + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore" )
+  navigator.geolocation.getCurrentPosition(
+    async function (geolocationPosition) {
+      const activity = await getActivity();
+
+      const feature0 = getFeatureData(activity.features[0]);
+      const distance0 = getDistance(geolocationPosition, feature0);
+
+      displayWarning(distance0, feature0);
     }
-  } else if(Distance <= 750) {
-    alert(info1);
-    document.getElementById("safety").innerHTML("UNSAFE");
-    document.getElementById("safety").style.background = "#ffd000";
+  );
+}
+
+// get distance
+
+function getDistance(position, feature) {
+  const userLatitude = position.coords.latitude;
+  const userLongitude = position.coords.longitude;
+  const userLatitudeDegrees = userLatitude / 57.29577951;
+  const userLongitudeDegrees = userLongitude / 57.29577951;
+  const earthQuakeLatitudeDegrees = feature.latitude / 57.29577951;
+  const earthQuakeLongitudeDegrees = feature.longitude / 57.29577951;
+
+  return 6378.8 *
+    Math.acos(
+      Math.sin(userLatitudeDegrees) *
+      Math.sin(earthQuakeLatitudeDegrees) +
+      Math.cos(userLatitudeDegrees) *
+      Math.cos(earthQuakeLatitudeDegrees) *
+      Math.cos(earthQuakeLongitudeDegrees - userLongitudeDegrees)
+    );
+}
+
+// wrap feature data you need into an object
+
+function getFeatureData(feature) {
+  return {
+    longitude: feature.geometry.coordinates[0],
+    latitude: feature.geometry.coordinates[1],
+    magnitude: feature.properties.mag,
+    tsunami: feature.properties.tsunami * 100,
+  };
+}
+
+// warn the user about the activity
+
+function setUnsafe(warning, bgcolor) {
+  safety.innerHTML = "UNSAFE";
+  safety.style.background = bgcolor;
+  alert(warning);
+}
+
+function setSafe(warning) {
+  safety.innerHTML = "SAFE";
+  safety.style.background = "#90ee90";
+  locationText.innerHTML = warning
+}
+
+function displayWarning(distance, feature) {
+  const mag = feature.magnitude;
+
+  let info = `A ${mag} magnitude earthquake just occured, ${distance.toFixed(2)}km away from you.`;
+  let warning = `Drop, Cover and Hold. ${info}`;
+
+  if (mag >= 7.0 && distance <= 500) {
+    if (tsunami > 0) {
+      locationText.innerHTML = 'Drop, Cover and Hold <br> a ' + mag + ' magnitude earthquake just occured ' + distance + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore";
+    }
+    return setUnsafe(warning, "#ff0000");
   }
+
+  if (mag >= 7.0 && distance <= 750) return setUnsafe(warning, "#ffd000");
+
+  if (mag >= 6.0 && distance <= 250) return setUnsafe(warning, "#ff0000");
+  if (mag >= 6.0 && distance <= 500) return setUnsafe(warning, "#ffd000");
+
+  if (mag >= 4.0 && distance <= 350) return setUnsafe(warning, "#ffd000");
+  if (mag >= 4.0 && distance <= 200) return setUnsafe(warning, "#ff0000");
+  
+  if (mag >= 2.5 && distance <= 100) return setUnsafe(warning, "#ffd000");
+  if (mag >= 2.5 && distance <= 150) return setSafe(info);
+  
+  if (mag >= 0.0) return setSafe(info);
 }
-function mag6() {
-  if(Distance <= 250) {
-    alert(info1);
-    document.getElementById("safety").innerHTML("UNSAFE");
-    document.getElementById("safety").style.background = "#ff0000";
-  } else if(Distance <= 500) {
-    alert(info1);
-    document.getElementById("safety").innerHTML("UNSAFE");
-    document.getElementById("safety").style.background = "#ffd000";
-  }
-}
-function mag4() {
-  if(Distance <= 200) {
-    alert(info1);
-    document.getElementById("safety").innerHTML("UNSAFE");
-    document.getElementById("safety").style.background = "#ff0000";
-  } else if(Distance <= 350) {
-    alert(info1);
-    document.getElementById("safety").innerHTML("UNSAFE");
-    document.getElementById("safety").style.background = "#ffd000";
-  }
-}
-function mag2() {
-  if(Distance <= 100) {
-    alert(info0);
-    document.getElementById("safety").innerHTML("UNSAFE");
-    document.getElementById("safety").style.background = "#ffd000";
-  } else if(Distance <= 150) {
-    alert(info0);
-    document.getElementById("safety").innerHTML("SAFE");
-    document.getElementById("safety").style.background = "#90ee90";
-  }
-}
-function mag0() {
-  alert(info0);
-  document.getElementById("safety").innerHTML("SAFE");
-  document.getElementById("safety").style.background = "#90ee90";
-}
-//---Call-Functions-------------
-if (magnitude >= 7.0) mag7(); // 7.0 +
-if (magnitude >= 6.0) mag6(); // 6.0 - 7.0
-if (magnitude >= 4.0) mag4(); // 4.0 - 6.0
-if (magnitude >= 2.5) mag2(); // 2.5 - 4.0
-if (magnitude >= 0.0) mag0(); // 0   - 2.5
