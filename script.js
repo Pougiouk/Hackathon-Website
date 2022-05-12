@@ -74,12 +74,12 @@ function setSafe(warning) {
 function displayWarning(distance, feature) {
   const mag = feature.magnitude;
 
-  let info = `A ${mag} magnitude earthquake just occured, ${distance.toFixed(2)}km away from you.`;
+  let info = `A ${mag.toFixed(2)} magnitude earthquake just occured, ${distance.toFixed(2)}km away from you.`;
   let warning = `Drop, Cover and Hold. ${info}`;
 
   if (mag >= 7.0 && distance <= 500) {
     if (tsunami > 0) {
-      locationText.innerHTML = 'Drop, Cover and Hold <br> a ' + mag + ' magnitude earthquake just occured ' + distance + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore";
+      locationText.innerHTML = 'Drop, Cover and Hold <br> a ' + mag.toFixed(2) + ' magnitude earthquake just occured ' + distance + 'Km away from you. <br> There is a ' + tsunami + "% chance there is going to be a tsunami so if you are neer the sea we recomend you either go on a stable building or get at least 15 Km distance from the seashore";
     }
     return setUnsafe(warning, "#ff0000");
   }
@@ -91,9 +91,9 @@ function displayWarning(distance, feature) {
 
   if (mag >= 4.0 && distance <= 350) return setUnsafe(warning, "#ffd000");
   if (mag >= 4.0 && distance <= 200) return setUnsafe(warning, "#ff0000");
-  
+
   if (mag >= 2.5 && distance <= 100) return setUnsafe(warning, "#ffd000");
   if (mag >= 2.5 && distance <= 150) return setSafe(info);
-  
+
   if (mag >= 0.0) return setSafe(info);
 }
