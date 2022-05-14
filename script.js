@@ -54,6 +54,7 @@ function getFeatureData(feature) {
     latitude: feature.geometry.coordinates[1],
     magnitude: feature.properties.mag,
     tsunami: feature.properties.tsunami * 100,
+    place: feature.properties.place,
   };
 }
 
@@ -73,8 +74,9 @@ function setSafe(warning) {
 
 function displayWarning(distance, feature) {
   const mag = feature.magnitude;
+  const place = feature.place;
 
-  let info = `A ${mag.toFixed(2)} magnitude earthquake just occured, ${distance.toFixed(2)}km away from you.`;
+  let info = `A ${mag.toFixed(2)} magnitude earthquake just occured, ${distance.toFixed(2)}km away from you (${place}).`;
   let warning = `Drop, Cover and Hold. ${info}`;
 
   if (mag >= 7.0 && distance <= 500) {
