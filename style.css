@@ -1,7 +1,7 @@
 html {
     background: #2a2a2a;
 }
-#Header, #container, #circle, #info {
+#Header, #container, #circle, #info, #map, #workInProgress {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-evenly;
@@ -57,4 +57,7 @@ p {
 #policy {
     font-size: 60%;
     padding-top: 200px;
+}
+.space { 
+    margin-top: 200px; 
 }
