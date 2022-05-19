@@ -1,7 +1,7 @@
 # Pougiouk.github.io
 Welcome to our github repo!
 
-The website is hosted on GitHub Pages, you can visit the website with this link
+The website is hosted on GitHub Pages, you can visit the website with [this link](https://pougiouk.github.io/)
 
 I am Alexis, Erectus Claudis' only programmer. I developed this website on my own, it is still under divelopment and in the future we hope to deploy the website with a plethora of more features.
 
