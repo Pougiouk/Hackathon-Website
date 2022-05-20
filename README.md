@@ -1,7 +1,8 @@
 # Pougiouk.github.io
-Welcome to our github repo!
 
 [![Logo](https://raw.githubusercontent.com/Pougiouk/Pougiouk.github.io/main/favicon.ico)](https://pougiouk.github.io/)
+
+Welcome to our github repo!
 
 The website is hosted on GitHub Pages, you can visit the website with [this link](https://pougiouk.github.io/) or by searching the project name (Pougiouk.github.io) in your web-browser.
 
