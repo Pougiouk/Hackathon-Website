@@ -61,3 +61,7 @@ p {
 .space { 
     margin-top: 200px; 
 }
+#socials a img {
+    width: 30px;
+    height: 30px;
+}
