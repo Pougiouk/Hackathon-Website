@@ -1,6 +1,6 @@
 # Pougiouk.github.io
 
-[![Logo](https://raw.githubusercontent.com/Pougiouk/Pougiouk.github.io/main/favicon.ico)](https://pougiouk.github.io/)
+[![Logo](https://raw.githubusercontent.com/Pougiouk/Pougiouk.github.io/main/favicon.ico)]
 
 Welcome to our github repo!
 
